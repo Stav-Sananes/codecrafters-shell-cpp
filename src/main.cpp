@@ -14,9 +14,10 @@ int main() {
       break;
     }
     if(command == "echo"){
+      std::cout << "\n";
       std::string message;
       std::getline(std::cin, message);
-      std::cout << message << '\n' << std::endl;
+      std::cout << message << std::endl;
       continue;
     } else{
       std::cout << command << ": command not found" << std::endl;
