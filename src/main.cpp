@@ -11,8 +11,7 @@ int main()
   while (true)
   {
     std::cout << "$ ";
-    std::cin >> command;
-
+    std::getline(std::cin, command);
     if (command == "exit")
     {
       break;
