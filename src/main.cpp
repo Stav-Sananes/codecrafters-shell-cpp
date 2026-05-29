@@ -15,8 +15,8 @@ int main() {
     }
     if(command == "echo"){
       std::string message;
-      std::cin >> message;
-      std::cout << message << std::endl;
+      std::getline(std::cin, message);
+      std::cout << message << '\n' << std::endl;
       continue;
     } else{
       std::cout << command << ": command not found" << std::endl;
