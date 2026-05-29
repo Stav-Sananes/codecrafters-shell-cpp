@@ -10,10 +10,10 @@ int main() {
   while(true){
     std::cout << "$ ";
     std::cin >> command;
+    std::cout << command.substr(5) << std::endl;
     if(command == "exit"){
       break;
     } else if(command.substr(0, 5) == "echo "){
-      std::cout << command.substr(5) << std::endl;
       std::string message = command.substr(5);
       std::getline(std::cin, message);
       std::cout << message << std::endl;
