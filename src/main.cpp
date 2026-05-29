@@ -9,5 +9,5 @@ int main() {
   
   std::cout << "$ ";
   std::cin >> command;
-  std::cout << "{command}: command not found" << command << std::endl;
+  std::cout << command << ": command not found" << std::endl;
 }
