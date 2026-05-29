@@ -15,7 +15,6 @@ int main() {
     }
     if(command == "echo"){
       std::string message;
-      std::getline(std::cin, message);
       std::cout << message << std::endl;
       continue;
     } else{
