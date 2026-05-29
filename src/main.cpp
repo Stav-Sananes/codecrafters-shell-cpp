@@ -12,9 +12,7 @@ int main() {
     std::cin >> command;
     if(command == "exit"){
       break;
-    }
-    if(command == "echo"){
-      std::cout << "\n";
+    } else if(command.substr(0, 4) == "echo "){
       std::string message;
       std::getline(std::cin, message);
       std::cout << message << std::endl;
