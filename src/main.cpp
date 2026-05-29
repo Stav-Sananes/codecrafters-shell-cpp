@@ -12,10 +12,8 @@ int main() {
     std::cin >> command;
     if(command == "exit"){
       break;
-    } else if(command.substr(0, 4) == "echo "){
-      std::string message;
-      std::getline(std::cin, message);
-      std::cout << message << std::endl;
+    } else if(command.substr(0, 4) == "echo"){
+      std::cout << command.substr(5) << std::endl;
       continue;
     } else{
       std::cout << command << ": command not found" << std::endl;
