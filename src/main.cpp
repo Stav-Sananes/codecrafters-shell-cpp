@@ -5,6 +5,19 @@
 #include <sstream>
 #include <string>
 #include <unistd.h>
+#include <vector>
+#include <sys/wait.h>
+std::vector<std::string> tokenize(const std::string &command)
+{
+  std::vector<std::string> tokens;
+  std::istringstream ss(command);
+  std::string token;
+  while (ss >> token)
+  {
+    tokens.push_back(token);
+  }
+  return tokens;
+}
 void typeCommand(std::string input,
                  const std::array<std::string, 10> &built_in_commands)
 {
@@ -36,6 +49,33 @@ void typeCommand(std::string input,
   }
   return;
 }
+void runExternal(const std::vector<std::string> &tokens)
+{
+  // execvp wants a null-terminated array of char*
+  std::vector<char *> argv;
+  for (const auto &t : tokens)
+  {
+    argv.push_back(const_cast<char *>(t.c_str()));
+  }
+  argv.push_back(nullptr);
+
+  pid_t pid = fork();
+  if (pid == 0)
+  {
+    execvp(argv[0], argv.data());
+    std::cerr << tokens[0] << ": command not found" << std::endl;
+    exit(1);
+  }
+  else if (pid > 0)
+  {
+    int status;
+    waitpid(pid, &status, 0);
+  }
+  else
+  {
+    std::cerr << "fork failed" << std::endl;
+  }
+}
 int main()
 {
   // Flush after every std::cout / std:cerr
@@ -62,7 +102,11 @@ int main()
     }
     else
     {
-      std::cout << command << ": command not found" << std::endl;
+      std::vector<std::string> tokens = tokenize(command);
+      if (!tokens.empty())
+      {
+        runExternal(tokens);
+      }
     }
   }
 }
