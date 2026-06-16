@@ -45,7 +45,7 @@ int main()
       }
       else if ((command.substr(5) == "grep" || command.substr(5) == "ls" || command.substr(5) == "cat") && has_execute_permission("/usr/bin/" + command.substr(5)))
       {
-        std::cout << command.substr(5) << " is " << fs::current_path() << std::endl;
+        std::cout << command.substr(5) << " is " << "/usr/bin/" << command.substr(5) << std::endl;
       }
       else
       {
