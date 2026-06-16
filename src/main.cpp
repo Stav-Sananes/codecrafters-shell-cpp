@@ -1,6 +1,11 @@
 #include <iostream>
 #include <string>
 #include <filesystem>
+#ifdef _WIN32
+constexpr char PATH_LIST_SEPARATOR = ';';
+#else
+constexpr char PATH_LIST_SEPARATOR = ':';
+#endif
 namespace fs = std::filesystem;
 bool has_execute_permission(const fs::path &file_path)
 {
@@ -38,7 +43,7 @@ int main()
       {
         std::cout << command.substr(5) << " is a shell builtin" << std::endl;
       }
-      else if ((command.substr(5) == "grep" || command.substr(5) == "ls") && has_execute_permission("/usr/bin/" + command.substr(5)))
+      else if ((command.substr(5) == "grep" || command.substr(5) == "ls" || command.substr(5) == "cat") && has_execute_permission("/usr/bin/" + command.substr(5)))
       {
         std::cout << command.substr(5) << " is " << fs::current_path() << std::endl;
       }
