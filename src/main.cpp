@@ -1,28 +1,41 @@
+#include <array>
+#include <cstddef>
+#include <cstdlib>
 #include <iostream>
+#include <sstream>
 #include <string>
-#include <filesystem>
-#ifdef _WIN32
-constexpr char PATH_LIST_SEPARATOR = ';';
-#else
-constexpr char PATH_LIST_SEPARATOR = ':';
-#endif
-namespace fs = std::filesystem;
-bool has_execute_permission(const fs::path &file_path)
-{
-  if (!fs::exists(file_path))
-  {
-    return false;
+#include <unistd.h>
+void typeCommand(std::string input,
+                 const std::array<std::string, 10> &built_in_commands) {
+  bool found = false;
+  for (int i = 0; i < built_in_commands.size(); i++) {
+    if (built_in_commands[i] == input.substr(5)) {
+      found = true;
+      std::cout << input.substr(5) << " is a shell builtin" << std::endl;
+      break;
+    }
   }
-
-  fs::perms p = fs::status(file_path).permissions();
-
-  return (p & (fs::perms::owner_exec | fs::perms::group_exec | fs::perms::others_exec)) != fs::perms::none;
+  if (found == false) {
+    std::string path = getenv("PATH");
+    std::istringstream ss(path);
+    std::string directory;
+    while (getline(ss, directory, ':')) {
+      std::string full_path = directory + "/" + input.substr(5);
+      if (!access(full_path.c_str(), X_OK)) {
+        std::cout << input.substr(5) << " is " << full_path << std::endl;
+        return;
+      }
+    }
+    std::cout << input.substr(5) << ": not found" << std::endl;
+  }
+  return;
 }
 int main()
 {
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
+    std::array<std::string, 10> built_in_commands = {"exit", "echo", "type"};
   std::string command;
 
   while (true)
@@ -43,9 +56,9 @@ int main()
       {
         std::cout << command.substr(5) << " is a shell builtin" << std::endl;
       }
-      else if ((command.substr(5) == "grep" || command.substr(5) == "ls" || command.substr(5) == "cat" || command.substr(5) == "cp") && has_execute_permission("/usr/bin/" + command.substr(5)))
+      else if ((command.substr(5) == "type"))
       {
-        std::cout << command.substr(5) << " is " << "/usr/bin/" << command.substr(5) << std::endl;
+         typeCommand(command, built_in_commands);
       }
       else
       {
