@@ -7,6 +7,7 @@
 #include <unistd.h>
 #include <vector>
 #include <sys/wait.h>
+#include <filesystem>
 std::vector<std::string> tokenize(const std::string &command)
 {
   std::vector<std::string> tokens;
@@ -81,7 +82,7 @@ int main()
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
-  std::array<std::string, 10> built_in_commands = {"exit", "echo", "type","pwd"};
+  std::array<std::string, 10> built_in_commands = {"exit", "echo", "type", "pwd", "cd"};
   std::string command;
 
   while (true)
@@ -102,7 +103,18 @@ int main()
     }
     else if (command.substr(0, 3) == "pwd")
     {
-      std::cout << getcwd(nullptr, 0) << std::endl;
+      std::filesystem::path cwd = std::filesystem::current_path();
+      std::cout << cwd << std::endl;
+    }
+    else if (command.substr(0, 2) == "cd")
+    {
+      std::filesystem::path new_path = command.substr(3);
+      if (!fs::exists(new_path))
+      {
+        std::cout << "cd: " << new_path << ": No such file or directory" << std::endl;
+      } else {
+        std::filesystem::current_path(new_path);
+      }
     }
     else
     {
