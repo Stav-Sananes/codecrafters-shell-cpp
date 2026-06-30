@@ -107,10 +107,13 @@ int main()
     }
     else if (command.substr(0, 2) == "cd")
     {
-      std::filesystem::path new_path = command.substr(3);
+      std::string arg = command.substr(3);
+      if (arg.size() >= 2 && arg.front() == '"' && arg.back() == '"')
+        arg = arg.substr(1, arg.size() - 2);
+      std::filesystem::path new_path = arg;
       if (!std::filesystem::exists(new_path))
       {
-        std::cout << "cd: " << new_path << ": No such file or directory" << std::endl;
+        std::cout << "cd: " << new_path.string() << ": No such file or directory" << std::endl;
       } else {
         std::filesystem::current_path(new_path);
       }
