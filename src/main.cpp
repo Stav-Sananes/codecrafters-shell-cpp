@@ -103,8 +103,7 @@ int main()
     }
     else if (command.substr(0, 3) == "pwd")
     {
-      std::filesystem::path cwd = std::filesystem::current_path();
-      std::cout << cwd << std::endl;
+      std::cout << std::filesystem::current_path(); << std::endl;
     }
     else if (command.substr(0, 2) == "cd")
     {
