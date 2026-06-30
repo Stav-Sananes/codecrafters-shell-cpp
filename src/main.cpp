@@ -109,7 +109,7 @@ int main()
     else if (command.substr(0, 2) == "cd")
     {
       std::filesystem::path new_path = command.substr(3);
-      if (!fs::exists(new_path))
+      if (!std::filesystem::exists(new_path))
       {
         std::cout << "cd: " << new_path << ": No such file or directory" << std::endl;
       } else {
