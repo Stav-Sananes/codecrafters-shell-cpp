@@ -81,7 +81,7 @@ int main()
   // Flush after every std::cout / std:cerr
   std::cout << std::unitbuf;
   std::cerr << std::unitbuf;
-  std::array<std::string, 10> built_in_commands = {"exit", "echo", "type"};
+  std::array<std::string, 10> built_in_commands = {"exit", "echo", "type","pwd"};
   std::string command;
 
   while (true)
