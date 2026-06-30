@@ -100,6 +100,10 @@ int main()
     {
       typeCommand(command, built_in_commands);
     }
+    else if (command.substr(0, 3) == "pwd")
+    {
+      std::cout << getcwd(nullptr, 0) << std::endl;
+    }
     else
     {
       std::vector<std::string> tokens = tokenize(command);
