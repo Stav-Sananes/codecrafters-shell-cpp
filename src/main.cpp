@@ -117,12 +117,7 @@ int main()
       }
       else
       {
-        if(new_path == "~")
-        {
-          new_path = std::filesystem::path(getenv("HOME"));
-          return;
-        }
-        std::filesystem::current_path(new_path);
+        std::filesystem::current_path(new_path == "~" ? std::filesystem::path(getenv("HOME")) : new_path);
       }
     }
     else
