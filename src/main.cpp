@@ -111,13 +111,16 @@ int main()
       if (arg.size() >= 2 && arg.front() == '"' && arg.back() == '"')
         arg = arg.substr(1, arg.size() - 2);
       std::filesystem::path new_path = arg;
-      if (!std::filesystem::exists(new_path))
+      if(new_path == "~"){
+         new_path = std::filesystem::path(getenv("HOME"));
+      }
+      else if (!std::filesystem::exists(new_path))
       {
         std::cout << "cd: " << new_path.string() << ": No such file or directory" << std::endl;
       }
       else
       {
-        std::filesystem::current_path(new_path == "~" ? std::filesystem::path(getenv("HOME")) : new_path);
+        std::filesystem::current_path(new_path);
       }
     }
     else
