@@ -112,8 +112,7 @@ int main()
         arg = arg.substr(1, arg.size() - 2);
       std::filesystem::path new_path = arg;
       if(!new_path.empty() && new_path.string().front() == '~'){
-        std::cout << "cd: " << new_path << std::endl;
-        std::filesystem::current_path(getenv("HOME"));
+        std::filesystem::current_path(std::filesystem::path(getenv("HOME")));
       }
       else if (!std::filesystem::exists(new_path))
       {
