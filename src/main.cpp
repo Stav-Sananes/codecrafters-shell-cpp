@@ -111,8 +111,8 @@ int main()
       if (arg.size() >= 2 && arg.front() == '"' && arg.back() == '"')
         arg = arg.substr(1, arg.size() - 2);
       std::filesystem::path new_path = arg;
-      if(new_path == "~"){
-         new_path = std::filesystem::path(getenv("HOME"));
+      if(new_path == '~'){
+         new_path = std::filesystem::current_path(getenv("HOME"));
       }
       else if (!std::filesystem::exists(new_path))
       {
