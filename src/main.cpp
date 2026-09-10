@@ -114,7 +114,14 @@ int main()
       if (!std::filesystem::exists(new_path))
       {
         std::cout << "cd: " << new_path.string() << ": No such file or directory" << std::endl;
-      } else {
+      }
+      else
+      {
+        if(new_path == "~")
+        {
+          new_path = std::filesystem::path(getenv("HOME"));
+          return;
+        }
         std::filesystem::current_path(new_path);
       }
     }
