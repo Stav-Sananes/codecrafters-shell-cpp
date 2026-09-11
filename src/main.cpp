@@ -21,7 +21,7 @@ std::vector<std::string> tokenize(const std::string &command)
         if (c == '\'')
         {
             inQuotes = !inQuotes;
-            inToken = true; // '' with nothing inside still counts as a token
+            inToken = true;
             continue;
         }
 
