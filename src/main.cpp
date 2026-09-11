@@ -80,35 +80,34 @@ void runExternal(const std::vector<std::string> &tokens)
 }
 std::string singleQuotes(std::string &command)
 {
-   std::string result;
-    bool in_single_quotes = false;
-    bool last_was_space = false;
+  std::string result;
+  result.reserve(command.size());
 
-    for (char c : command) {
-        if (c == '\'') {
-            // Toggle the single quote state
-            in_single_quotes = !in_single_quotes;
-            // Reset space tracking when entering/leaving quotes to prevent edge cases
-            last_was_space = false; 
-        } 
-        else if (in_single_quotes) {
-            // Inside quotes: keep everything exactly as-is (including multiple spaces)
-            result += c;
-        } 
-        else {
-            // Outside quotes: check for consecutive spaces
-            if (c == ' ') {
-                if (!last_was_space) {
-                    result += c; // Keep only the first space
-                    last_was_space = true;
-                }
-            } else {
-                result += c;
-                last_was_space = false; // Reset when encountering a regular character
-            }
-        }
+  bool inQuotes = false;
+  bool lastWasSpace = false;
+
+  for (char c : command)
+  {
+    if (c == '\'')
+    {
+      inQuotes = !inQuotes;
+      continue;
     }
-    return result;
+    if (!inQuotes && c == ' ')
+    {
+      if (lastWasSpace)
+        continue;
+      lastWasSpace = true;
+    }
+    else
+    {
+      lastWasSpace = false;
+    }
+    result += c;
+  }
+
+  command = result;
+  return command;
 }
 int main()
 {
