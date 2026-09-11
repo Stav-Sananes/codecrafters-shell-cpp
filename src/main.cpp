@@ -11,14 +11,39 @@
 #include <regex>
 std::vector<std::string> tokenize(const std::string &command)
 {
-  std::vector<std::string> tokens;
-  std::istringstream ss(command);
-  std::string token;
-  while (ss >> token)
-  {
-    tokens.push_back(token);
-  }
-  return tokens;
+    std::vector<std::string> tokens;
+    std::string current;
+    bool inQuotes = false;
+    bool inToken = false;
+
+    for (char c : command)
+    {
+        if (c == '\'')
+        {
+            inQuotes = !inQuotes;
+            inToken = true; // '' with nothing inside still counts as a token
+            continue;
+        }
+
+        if (!inQuotes && std::isspace(static_cast<unsigned char>(c)))
+        {
+            if (inToken)
+            {
+                tokens.push_back(current);
+                current.clear();
+                inToken = false;
+            }
+            continue;
+        }
+
+        current += c;
+        inToken = true;
+    }
+
+    if (inToken)
+        tokens.push_back(current);
+
+    return tokens;
 }
 void typeCommand(std::string input,
                  const std::array<std::string, 10> &built_in_commands)
@@ -78,37 +103,7 @@ void runExternal(const std::vector<std::string> &tokens)
     std::cerr << "fork failed" << std::endl;
   }
 }
-std::string singleQuotes(std::string &command)
-{
-  std::string result;
-  result.reserve(command.size());
 
-  bool inQuotes = false;
-  bool lastWasSpace = false;
-
-  for (char c : command)
-  {
-    if (c == '\'')
-    {
-      inQuotes = !inQuotes;
-      continue;
-    }
-    if (!inQuotes && c == ' ')
-    {
-      if (lastWasSpace)
-        continue;
-      lastWasSpace = true;
-    }
-    else
-    {
-      lastWasSpace = false;
-    }
-    result += c;
-  }
-
-  command = result;
-  return command;
-}
 int main()
 {
   // Flush after every std::cout / std:cerr
@@ -127,8 +122,13 @@ int main()
     }
     else if (command.substr(0, 5) == "echo ")
     {
-      singleQuotes(command);
-      std::cout << command.substr(5) << std::endl;
+    std::vector<std::string> tokens = tokenize(command); 
+    for (size_t i = 1; i < tokens.size(); i++)
+    {
+        if (i > 1) std::cout << " ";
+        std::cout << tokens[i];
+    }
+    std::cout << std::endl;
     }
     else if (command.substr(0, 4) == "type")
     {
