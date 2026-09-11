@@ -8,6 +8,7 @@
 #include <vector>
 #include <sys/wait.h>
 #include <filesystem>
+#include <regex>
 std::vector<std::string> tokenize(const std::string &command)
 {
   std::vector<std::string> tokens;
@@ -77,6 +78,17 @@ void runExternal(const std::vector<std::string> &tokens)
     std::cerr << "fork failed" << std::endl;
   }
 }
+std::string singleQuotes(std::string &command)
+{
+  std::regex pattern(R"('([^']*)')");
+  std::smatch match;
+  while (std::regex_search(command, match, pattern))
+  {
+    std::string replacement = match[1].str();
+    command.replace(match.position(0), match.length(0), replacement);
+  }
+  return command;
+}
 int main()
 {
   // Flush after every std::cout / std:cerr
@@ -95,6 +107,7 @@ int main()
     }
     else if (command.substr(0, 5) == "echo ")
     {
+      singleQuotes(command);
       std::cout << command.substr(5) << std::endl;
     }
     else if (command.substr(0, 4) == "type")
@@ -111,7 +124,8 @@ int main()
       if (arg.size() >= 2 && arg.front() == '"' && arg.back() == '"')
         arg = arg.substr(1, arg.size() - 2);
       std::filesystem::path new_path = arg;
-      if(!new_path.empty() && new_path.string().front() == '~'){
+      if (!new_path.empty() && new_path.string().front() == '~')
+      {
         std::filesystem::current_path(std::filesystem::path(getenv("HOME")));
       }
       else if (!std::filesystem::exists(new_path))
