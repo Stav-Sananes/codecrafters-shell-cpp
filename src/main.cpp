@@ -13,18 +13,24 @@ std::vector<std::string> tokenize(const std::string &command)
 {
     std::vector<std::string> tokens;
     std::string current;
-    bool inQuotes = false;
+    bool inSingleQuotes = false;
     bool inToken = false;
-
+    bool inDoubleQuotes = false;
     for (char c : command)
     {
-        if (c == '\'' || c == '\"')
+        if (c == '\'' && !inDoubleQuotes)
         {
-            inQuotes = !inQuotes;
+            inSingleQuotes = !inSingleQuotes;
             inToken = true;
             continue;
         }
-
+          if (c == '"' && !inSingleQuotes)
+        {
+            inDoubleQuotes = !inDoubleQuotes;
+            inToken = true;
+            continue;
+        }
+        bool inQuotes = inSingleQuotes || inDoubleQuotes;
         if (!inQuotes && std::isspace(static_cast<unsigned char>(c)))
         {
             if (inToken)
