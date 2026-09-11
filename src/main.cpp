@@ -87,6 +87,9 @@ std::string singleQuotes(std::string &command)
     std::string replacement = match[1].str();
     command.replace(match.position(0), match.length(0), replacement);
   }
+  command.erase(std::unique(command.begin(), command.end(), [](unsigned char a, unsigned char b) {
+      return (a == ' ' && b == ' ');
+  }), command.end());
   return command;
 }
 int main()
