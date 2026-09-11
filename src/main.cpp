@@ -18,7 +18,7 @@ std::vector<std::string> tokenize(const std::string &command)
 
     for (char c : command)
     {
-        if (c == '\'')
+        if (c == '\'' || c == '\"')
         {
             inQuotes = !inQuotes;
             inToken = true;
